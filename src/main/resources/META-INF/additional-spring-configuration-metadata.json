@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "localStorage.documentService.filePathName",
+      "type": "java.lang.String",
+      "description": "File Path for LocalStorageDocumentService."
+    }
+  ]
+}

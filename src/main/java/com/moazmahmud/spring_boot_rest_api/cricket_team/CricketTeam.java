@@ -1,9 +1,12 @@
 package com.moazmahmud.spring_boot_rest_api.cricket_team;
 
+import com.moazmahmud.spring_boot_rest_api.cricket_player.CricketPlayer;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,4 +23,7 @@ public class CricketTeam {
 
     @Column(name = "nick_name")
     private String nickName;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cricketTeam")
+    private Set<CricketPlayer> cricketPlayers = new HashSet<>();
 }

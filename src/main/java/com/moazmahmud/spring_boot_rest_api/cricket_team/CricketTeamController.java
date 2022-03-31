@@ -87,4 +87,16 @@ public class CricketTeamController extends BaseRestController {
                 .payload(responseWithPlayers)
                 .build();
     }
+
+    @PostMapping("/{cricketTeamId}/cricket-players")
+    public ResponseEntity<Void> addCricketPlayersToTeam(
+            @PathVariable("cricketTeamId") Long cricketTeamId,
+            @RequestBody CricketTeamCricketPlayerAddRequest cricketTeamCricketPlayerAddRequest
+    ) throws URISyntaxException {
+        cricketTeamService.addCricketPlayersToTeam(cricketTeamId, cricketTeamCricketPlayerAddRequest);
+        String createdUrl = String.format("/api/v1/cricket-teams/%d/cricket-players", cricketTeamId);
+        return ResponseEntity
+                .created(new URI(createdUrl))
+                .build();
+    }
 }

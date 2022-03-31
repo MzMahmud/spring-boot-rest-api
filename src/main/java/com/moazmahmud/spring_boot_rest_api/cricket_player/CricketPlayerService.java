@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +21,14 @@ public class CricketPlayerService {
             return Optional.empty();
         }
         return cricketPlayerRepository.findById(id);
+    }
+
+    @Transactional
+    public void updateCricketPlayerTeam(Collection<Long> ids, Long cricketTeamId) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        cricketPlayerRepository.updateCricketPlayerTeam(ids, cricketTeamId);
     }
 
     private CricketPlayer setEntityFromAddRequest(CricketPlayer cricketPlayer,

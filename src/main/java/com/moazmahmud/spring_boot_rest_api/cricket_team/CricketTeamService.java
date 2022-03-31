@@ -24,7 +24,16 @@ public class CricketTeamService {
         return cricketTeamRepository.findById(id);
     }
 
-    private Optional<CricketTeam> getEntityWithPlayersById(Long cricketTeamId) {
+    @Transactional(readOnly = true)
+    protected boolean existsById(Long id) {
+        if (id == null) {
+            return false;
+        }
+        return cricketTeamRepository.existsById(id);
+    }
+
+    @Transactional
+    protected Optional<CricketTeam> getEntityWithPlayersById(Long cricketTeamId) {
         if (cricketTeamId == null) {
             return Optional.empty();
         }
@@ -111,5 +120,16 @@ public class CricketTeamService {
         return getEntityWithPlayersById(cricketTeamId)
                 .map(this::mapEntityToResponseWithPlayers)
                 .orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + cricketTeamId));
+    }
+
+    @Transactional
+    public void addCricketPlayersToTeam(Long cricketTeamId, CricketTeamCricketPlayerAddRequest addRequest) {
+        if (!existsById(cricketTeamId)) {
+            throw new NotFoundException("No CricketTeam found with id=" + cricketTeamId);
+        }
+        cricketPlayerService.updateCricketPlayerTeam(
+                addRequest.getCricketPlayerIds(),
+                cricketTeamId
+        );
     }
 }

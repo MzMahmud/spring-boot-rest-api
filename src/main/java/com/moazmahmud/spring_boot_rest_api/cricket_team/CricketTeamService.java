@@ -1,6 +1,7 @@
 package com.moazmahmud.spring_boot_rest_api.cricket_team;
 
 import com.moazmahmud.spring_boot_rest_api.common.NotFoundException;
+import com.moazmahmud.spring_boot_rest_api.cricket_player.CricketPlayerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +15,20 @@ import java.util.stream.Collectors;
 public class CricketTeamService {
 
     private final CricketTeamRepository cricketTeamRepository;
+    private final CricketPlayerService cricketPlayerService;
 
     private Optional<CricketTeam> findById(Long id) {
         if (id == null) {
             return Optional.empty();
         }
         return cricketTeamRepository.findById(id);
+    }
+
+    private Optional<CricketTeam> getEntityWithPlayersById(Long cricketTeamId) {
+        if (cricketTeamId == null) {
+            return Optional.empty();
+        }
+        return cricketTeamRepository.getEntityWithPlayersById(cricketTeamId);
     }
 
     private CricketTeam setEntityFromAddRequest(CricketTeam cricketTeam,
@@ -42,7 +51,7 @@ public class CricketTeamService {
     }
 
     @Transactional
-    public CricketTeam updateCricketTeam(Long id, CricketTeamAddRequest addRequest) {
+    public void updateCricketTeam(Long id, CricketTeamAddRequest addRequest) {
         CricketTeam cricketTeam =
                 findById(id).orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + id));
         setEntityFromAddRequest(
@@ -50,7 +59,7 @@ public class CricketTeamService {
                 cricketTeam.getId(),
                 addRequest
         );
-        return cricketTeamRepository.save(cricketTeam);
+        cricketTeamRepository.save(cricketTeam);
     }
 
     private CricketTeamResponse getResponseFromEntity(CricketTeam cricketTeam) {
@@ -81,5 +90,26 @@ public class CricketTeamService {
         CricketTeam cricketTeam =
                 findById(id).orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + id));
         cricketTeamRepository.delete(cricketTeam);
+    }
+
+    private CricketTeamResponseWithPlayers mapEntityToResponseWithPlayers(CricketTeam cricketTeam) {
+        CricketTeamResponseWithPlayers responseWithPlayers = new CricketTeamResponseWithPlayers();
+        responseWithPlayers.setId(cricketTeam.getId());
+        responseWithPlayers.setName(cricketTeam.getName());
+        responseWithPlayers.setNickName(cricketTeam.getNickName());
+        responseWithPlayers.setCricketPlayerList(
+                cricketTeam.getCricketPlayers()
+                           .stream()
+                           .map(cricketPlayerService::mapEntityToResponse)
+                           .collect(Collectors.toUnmodifiableList())
+        );
+        return responseWithPlayers;
+    }
+
+    @Transactional(readOnly = true)
+    public CricketTeamResponseWithPlayers getCricketPlayers(Long cricketTeamId) {
+        return getEntityWithPlayersById(cricketTeamId)
+                .map(this::mapEntityToResponseWithPlayers)
+                .orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + cricketTeamId));
     }
 }

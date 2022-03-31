@@ -43,7 +43,7 @@ public class CricketPlayerService {
     }
 
     @Transactional
-    public CricketPlayer updateCricketPlayer(Long id, CricketPlayerAddRequest addRequest) {
+    public void updateCricketPlayer(Long id, CricketPlayerAddRequest addRequest) {
         CricketPlayer cricketPlayer =
                 findById(id).orElseThrow(() -> new NotFoundException("No CricketPlayer found with id=" + id));
         setEntityFromAddRequest(
@@ -51,10 +51,10 @@ public class CricketPlayerService {
                 cricketPlayer.getId(),
                 addRequest
         );
-        return cricketPlayerRepository.save(cricketPlayer);
+        cricketPlayerRepository.save(cricketPlayer);
     }
 
-    private CricketPlayerResponse getResponseFromEntity(CricketPlayer cricketPlayer) {
+    public CricketPlayerResponse mapEntityToResponse(CricketPlayer cricketPlayer) {
         CricketPlayerResponse cricketPlayerResponse = new CricketPlayerResponse();
         cricketPlayerResponse.setId(cricketPlayer.getId());
         cricketPlayerResponse.setName(cricketPlayer.getName());
@@ -68,14 +68,14 @@ public class CricketPlayerService {
         return cricketPlayerRepository
                 .findAll()
                 .stream()
-                .map(this::getResponseFromEntity)
+                .map(this::mapEntityToResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
     public CricketPlayerResponse getCricketPlayer(Long id) {
         return findById(id)
-                .map(this::getResponseFromEntity)
+                .map(this::mapEntityToResponse)
                 .orElseThrow(() -> new NotFoundException("No CricketPlayer found with id=" + id));
     }
 

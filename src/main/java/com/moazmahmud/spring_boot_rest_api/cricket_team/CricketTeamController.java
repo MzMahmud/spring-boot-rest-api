@@ -73,4 +73,18 @@ public class CricketTeamController extends BaseRestController {
                 .noContent()
                 .build();
     }
+
+    @GetMapping("/{cricketTeamId}/cricket-players")
+    public RestResponse getCricketPlayers(
+            @PathVariable("cricketTeamId") Long cricketTeamId
+    ) {
+        CricketTeamResponseWithPlayers responseWithPlayers =
+                cricketTeamService.getCricketPlayers(cricketTeamId);
+        return RestResponse
+                .builder()
+                .success(true)
+                .time(LocalDateTime.now())
+                .payload(responseWithPlayers)
+                .build();
+    }
 }

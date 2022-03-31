@@ -74,7 +74,7 @@ public class CricketTeamService {
     public CricketTeamResponse getCricketTeam(Long id) {
         return findById(id)
                 .map(this::getResponseFromEntity)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + id));
     }
 
     public void deleteCricketTeam(Long id) {

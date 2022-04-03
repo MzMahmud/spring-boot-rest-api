@@ -15,6 +15,6 @@ public interface CricketPlayerRepository extends JpaRepository<CricketPlayer, Lo
            "where cricketPlayer.id in (:cricketPlayerIds)")
     void updateCricketPlayerTeam(
             @Param("cricketPlayerIds") Collection<Long> cricketPlayerIds,
-            @Param("cricketTeamId")Long cricketTeamId
+            @Param("cricketTeamId") Long cricketTeamId
     );
 }

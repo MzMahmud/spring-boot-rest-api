@@ -22,7 +22,7 @@ public enum CricketPlayerType {
                     ));
 
     public static CricketPlayerType getByName(String name) {
-        if(name == null || !mapByName.containsKey(name)) {
+        if (name == null || !mapByName.containsKey(name)) {
             throw new NotFoundException("No CricketPlayerType found with name=" + name);
         }
         return mapByName.get(name);

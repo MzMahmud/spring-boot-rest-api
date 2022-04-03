@@ -51,27 +51,18 @@ public class CricketTeamService {
 
     @Transactional
     public CricketTeam addCricketTeam(CricketTeamAddRequest addRequest) {
-        CricketTeam cricketTeam = setEntityFromAddRequest(
-                new CricketTeam(),
-                null,
-                addRequest
-        );
+        CricketTeam cricketTeam = setEntityFromAddRequest(new CricketTeam(), null, addRequest);
         return cricketTeamRepository.save(cricketTeam);
     }
 
     @Transactional
     public void updateCricketTeam(Long id, CricketTeamAddRequest addRequest) {
-        CricketTeam cricketTeam =
-                findById(id).orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + id));
-        setEntityFromAddRequest(
-                cricketTeam,
-                cricketTeam.getId(),
-                addRequest
-        );
+        CricketTeam cricketTeam = findById(id).orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + id));
+        setEntityFromAddRequest(cricketTeam, cricketTeam.getId(), addRequest);
         cricketTeamRepository.save(cricketTeam);
     }
 
-    private CricketTeamResponse getResponseFromEntity(CricketTeam cricketTeam) {
+    private CricketTeamResponse mapEntityToResponse(CricketTeam cricketTeam) {
         CricketTeamResponse cricketTeamResponse = new CricketTeamResponse();
         cricketTeamResponse.setId(cricketTeam.getId());
         cricketTeamResponse.setName(cricketTeam.getName());
@@ -84,14 +75,14 @@ public class CricketTeamService {
         return cricketTeamRepository
                 .findAll()
                 .stream()
-                .map(this::getResponseFromEntity)
+                .map(this::mapEntityToResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
     public CricketTeamResponse getCricketTeam(Long id) {
         return findById(id)
-                .map(this::getResponseFromEntity)
+                .map(this::mapEntityToResponse)
                 .orElseThrow(() -> new NotFoundException("No CricketTeam found with id=" + id));
     }
 

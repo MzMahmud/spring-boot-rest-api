@@ -43,23 +43,14 @@ public class CricketPlayerService {
 
     @Transactional
     public CricketPlayer addCricketPlayer(CricketPlayerAddRequest addRequest) {
-        CricketPlayer cricketPlayer = setEntityFromAddRequest(
-                new CricketPlayer(),
-                null,
-                addRequest
-        );
+        CricketPlayer cricketPlayer = setEntityFromAddRequest(new CricketPlayer(), null, addRequest);
         return cricketPlayerRepository.save(cricketPlayer);
     }
 
     @Transactional
     public void updateCricketPlayer(Long id, CricketPlayerAddRequest addRequest) {
-        CricketPlayer cricketPlayer =
-                findById(id).orElseThrow(() -> new NotFoundException("No CricketPlayer found with id=" + id));
-        setEntityFromAddRequest(
-                cricketPlayer,
-                cricketPlayer.getId(),
-                addRequest
-        );
+        CricketPlayer cricketPlayer = findById(id).orElseThrow(() -> new NotFoundException("No CricketPlayer found with id=" + id));
+        setEntityFromAddRequest(cricketPlayer, cricketPlayer.getId(), addRequest);
         cricketPlayerRepository.save(cricketPlayer);
     }
 
@@ -89,8 +80,7 @@ public class CricketPlayerService {
     }
 
     public void deleteCricketPlayer(Long id) {
-        CricketPlayer cricketPlayer =
-                findById(id).orElseThrow(() -> new NotFoundException("No CricketPlayer found with id=" + id));
+        CricketPlayer cricketPlayer = findById(id).orElseThrow(() -> new NotFoundException("No CricketPlayer found with id=" + id));
         cricketPlayerRepository.delete(cricketPlayer);
     }
 }

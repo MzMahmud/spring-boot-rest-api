@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface CricketTeamRepository extends JpaRepository<CricketTeam, Long> {
 
-    @Query("from CricketTeam cricketTeamjoin " +
-           "left join fetch cricketTeamjoin.cricketPlayers " +
-           "where cricketTeamjoin.id = :id")
+    @Query("from CricketTeam cricketTeam " +
+           "left join fetch cricketTeam.cricketPlayers " +
+           "where cricketTeam.id = :id")
     Optional<CricketTeam> getEntityWithPlayersById(@Param("id") Long id);
 }
